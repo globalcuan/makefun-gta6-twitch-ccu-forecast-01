@@ -1,3 +1,18 @@
+"""Forecast Twitch launch-day viewers for make.fun contest cases.
+
+Each case file is JSON containing the launch game, known hourly observations,
+comparable launches, and requested forecast hours. The program writes one JSON
+result per case, with quantiles for each requested hour. It is designed for the
+8-second contest runtime, uses only the Python standard library, and produces
+deterministic output.
+
+The forecast derives release-day hour-to-hour ratios from comparable curves,
+then estimates weighted median log-ratios and robust spreads. Comparable curves
+are weighted by scale similarity: launches with hour-1 audiences closer to the
+target's hour-1 audience receive more weight. Smoothed lognormal quantiles give
+the forecast, with a persistence-based fallback when comparable data is sparse.
+"""
+
 import json
 import math
 import os
@@ -67,7 +82,9 @@ def round2(value):
 
 
 def forecast(case):
-    first = next((row for row in case.get("known", []) if row.get("hour") == 1), {})
+    first = next((row for row in case.get("known", []) if row.get("hour") == 1), None)
+    if first is None:
+        raise ValueError("case is missing the known hour-1 row")
     p1 = max(1.0, finite_positive(first.get("viewers")) or 1.0)
 
     ratios = {hour: [] for hour in range(2, 25)}

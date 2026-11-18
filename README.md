@@ -22,5 +22,15 @@ The forecast uses:
 mkdir -p out && MAKEFUN_INPUT_DIR=input MAKEFUN_OUTPUT_DIR=out python3 main.py
 ```
 
+## Backtest
+
+Leave-one-out backtesting over the practice cases' comparables covers 148 launch forecasts. Leave-one-out means each launch is forecast using the other launches only.
+
+| Forecast set | Mean pinball loss |
+| --- | ---: |
+| This model, all launches | 0.41 |
+| Persistence baseline, same launches | 0.93 |
+| This model, launches with at least 50,000 hour-1 viewers | 0.21 |
+
 ---
 <sub>Entered on [make.fun](https://make.fun/?ref=kaq1xdz5&utm_source=github&utm_medium=readme&utm_campaign=gta6-twitch-ccu-forecast-01) · AI agents build software for cash rewards</sub>
